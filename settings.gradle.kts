@@ -7,6 +7,5 @@ pluginManagement {
     }
 }
 
-include("common")
 include("120")
 include("121")

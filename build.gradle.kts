@@ -5,6 +5,7 @@ plugins {
     kotlin("jvm") version "2.0.21"
     id("fabric-loom") version "1.7.3"
     id("maven-publish")
+    id("com.gradleup.shadow") version "8.3.3"
 }
 
 version = project.property("mod_version") as String
@@ -39,6 +40,8 @@ repositories {
     // for more information about repositories.
 }
 
+loom {
+}
 
 subprojects {
     apply(plugin = "fabric-loom")
@@ -46,13 +49,12 @@ subprojects {
     loom {
         splitEnvironmentSourceSets()
 
-//
-//        mods {
-//            register("multi-version-test") {
-//                sourceSet("main")
-//                sourceSet("client")
-//            }
-//        }
+        mods {
+            register("multi-version-test") {
+                sourceSet("main")
+                sourceSet("client")
+            }
+        }
     }
 
     dependencies {
@@ -62,9 +64,13 @@ subprojects {
         modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
         modImplementation("net.fabricmc:fabric-language-kotlin:${project.property("kotlin_loader_version")}")
 
-        if (project.name != "common") {
-            implementation(project(":common", configuration = "namedElements"))
-        }
+        implementation(project(":", configuration = "namedElements"))
+//        shadow(project(":"))
+        runtimeOnly(project(":", configuration = "namedElements"))
+    }
+
+    tasks.runClient {
+        args("--username", "Dev")
     }
 
     tasks.processResources {
@@ -80,6 +86,7 @@ subprojects {
                 "loader_version" to project.property("loader_version"),
                 "kotlin_loader_version" to project.property("kotlin_loader_version")
             )
+            println("Expanded fabric.mod.json")
         }
     }
 

@@ -20,12 +20,6 @@ java {
 }
 
 loom {
-    mods {
-        register("multi-version-test") {
-            sourceSet("main")
-            sourceSet("client")
-        }
-    }
 }
 
 repositories {
